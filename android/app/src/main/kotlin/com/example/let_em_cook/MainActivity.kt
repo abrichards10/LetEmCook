@@ -1,0 +1,5 @@
+package com.example.let_em_cook
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
