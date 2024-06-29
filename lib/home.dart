@@ -92,40 +92,64 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        actions: [Text("Hi")],
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        title: Text(
-          "Let 'Em Cook",
-          style: TextStyle(
-            fontFamily: GoogleFonts.adventPro().fontFamily,
-            fontWeight: FontWeight.bold,
-            fontSize: width * .08,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.account_circle_outlined,
+            ),
+            onPressed: () {},
+          )
+        ],
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu_rounded,
           ),
+          onPressed: () {},
         ),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        // title: Text(
+        //   "Let 'Em Cook",
+        //   style: TextStyle(
+        //     fontFamily: GoogleFonts.adventPro().fontFamily,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: width * .08,
+        //   ),
+        // ),
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [_savedRecipesList(), _ingredientsList()],
+          children: [
+            _savedRecipesList(),
+            Divider(
+              indent: 20,
+              endIndent: 20,
+            ),
+            _searchedRecipesResults(),
+            Divider(
+              indent: 20,
+              endIndent: 20,
+            ),
+            _ingredientsList(),
+          ],
         ),
       ),
     );
   }
 
-  _savedRecipesList() {
+  CarouselSlider _savedRecipesList() {
     return CarouselSlider(
       options: CarouselOptions(
         height: 250.0,
         aspectRatio: 16 / 9,
-        viewportFraction: 0.3,
+        viewportFraction: 0.35,
       ),
       items: savedRecipes.map((i) {
         return Builder(
           builder: (BuildContext context) {
             return Column(
               children: [
-                Text("TITLE"),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 5, 5, 5),
+                  margin: EdgeInsets.all(10),
                   width: 200.0,
                   height: 200.0,
                   decoration: BoxDecoration(
@@ -133,13 +157,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       image: AssetImage('assets/image1.jpg'),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    // borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     border: Border.all(
-                      color: Color.fromARGB(255, 124, 198, 218),
+                      color: Color.fromARGB(255, 124, 218, 137),
                       width: 4.0,
                     ),
                   ),
                 ),
+                Text("TITLE"),
               ],
             );
           },
@@ -148,7 +173,37 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _ingredientsList() {
+  _searchedRecipesResults() {
+    return SizedBox(
+      height: 200,
+      child: GridView.builder(
+          itemCount: 100,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              margin: EdgeInsets.all(10),
+              width: 200.0,
+              height: 200.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/image1.jpg'),
+                  fit: BoxFit.cover,
+                ),
+                // borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                border: Border.all(
+                  color: Color.fromARGB(255, 124, 218, 137),
+                  width: 4.0,
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
+  SizedBox _ingredientsList() {
     return SizedBox(
       height: 200,
       child: Container(
@@ -166,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 44,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
-                  color: Color.fromARGB(255, 124, 198, 218),
+                  color: Color.fromARGB(255, 104, 185, 115),
                 ),
                 child: Text(
                   textAlign: TextAlign.center,
