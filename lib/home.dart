@@ -18,48 +18,48 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> ingredientsList = <String>[
-    "flour",
-    "sugar",
-    "salt",
-    "butter",
-    "eggs",
-    "milk",
-    "baking powder",
-    "vanilla extract",
-    "chocolate chips",
-    "cocoa powder",
-    "brown sugar",
-    "baking soda",
-    "yeast",
-    "olive oil",
-    "honey",
-    "lemon juice",
-    "garlic",
-    "onion",
-    "tomato",
-    "carrot",
-    "celery",
-    "chicken broth",
-    "beef broth",
-    "pasta",
-    "rice",
-    "beans",
-    "corn",
-    "bell pepper",
-    "cheese",
-    "basil",
-    "oregano",
-    "thyme",
-    "rosemary",
-    "parsley",
-    "cilantro",
-    "cumin",
-    "paprika",
-    "cinnamon",
-    "nutmeg",
-    "ginger",
-    "black pepper",
-    "red pepper flakes"
+    "🌾 flour",
+    "🍬 sugar",
+    "🧂 salt",
+    "🧈 butter",
+    "🥚 eggs",
+    "🥛 milk",
+    "🧁 baking powder",
+    "🍦 vanilla extract",
+    "🍫 chocolate chips",
+    "🍫 cocoa powder",
+    "🍯 brown sugar",
+    "🥤 baking soda",
+    "🍞 yeast",
+    "🫒 olive oil",
+    "🍯 honey",
+    "🍋 lemon juice",
+    "🧄 garlic",
+    "🧅 onion",
+    "🍅 tomato",
+    "🥕 carrot",
+    "🥬 celery",
+    "🍗 chicken broth",
+    "🥩 beef broth",
+    "🍝 pasta",
+    "🍚 rice",
+    "🫘 beans",
+    "🌽 corn",
+    "🫑 bell pepper",
+    "🧀 cheese",
+    "🌿 basil",
+    "🌿 oregano",
+    "🌿 thyme",
+    "🌿 rosemary",
+    "🌿 parsley",
+    "🌿 cilantro",
+    "🌿 cumin",
+    "🌶️ paprika",
+    "🌰 cinnamon",
+    "🍂 nutmeg",
+    "🍠 ginger",
+    "⚫ black pepper",
+    "🌶️ red pepper flakes"
   ];
 
   List<RecipeInfo> savedRecipes = <RecipeInfo>[
@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // title: Text(
         //   "Let 'Em Cook",
         //   style: TextStyle(
-        //     fontFamily: GoogleFonts.adventPro().fontFamily,
+        //  fontFamily: GoogleFonts.adventPro().fontFamily,
         //     fontWeight: FontWeight.bold,
         //     fontSize: width * .08,
         //   ),
@@ -133,6 +133,46 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 0,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.abc,
+              color: Colors.black,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.abc,
+              color: Colors.black,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.abc,
+              color: Colors.black,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.abc,
+              color: Colors.black,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.abc,
+              color: Colors.black,
+            ),
+            label: "",
+          )
+        ],
+      ),
     );
   }
 
@@ -153,18 +193,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 200.0,
                   height: 200.0,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
                       image: AssetImage('assets/image1.jpg'),
                       fit: BoxFit.cover,
                     ),
-                    // borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 124, 218, 137),
-                      width: 4.0,
-                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(150, 144, 208, 156),
+                        offset: Offset(
+                          5,
+                          5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text("TITLE"),
+                Text(
+                  "TITLE",
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.adventPro().fontFamily,
+                  ),
+                ),
               ],
             );
           },
@@ -183,21 +233,36 @@ class _MyHomePageState extends State<MyHomePage> {
             childAspectRatio: 1,
           ),
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              margin: EdgeInsets.all(10),
-              width: 200.0,
-              height: 200.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/image1.jpg'),
-                  fit: BoxFit.cover,
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10),
+                  width: 150.0,
+                  height: 150.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    image: DecorationImage(
+                      image: AssetImage('assets/image1.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(150, 144, 208, 156),
+                        offset: Offset(
+                          5,
+                          5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                // borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                border: Border.all(
-                  color: Color.fromARGB(255, 124, 218, 137),
-                  width: 4.0,
+                Text(
+                  "TITLE",
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.adventPro().fontFamily,
+                  ),
                 ),
-              ),
+              ],
             );
           }),
     );
@@ -220,15 +285,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: Alignment.center,
                 height: 44,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  color: Color.fromARGB(255, 104, 185, 115),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(150, 144, 208, 156),
+                      offset: Offset(
+                        5,
+                        5,
+                      ),
+                    ),
+                  ],
                 ),
                 child: Text(
                   textAlign: TextAlign.center,
                   ingredientsList[index],
                   style: TextStyle(
                     fontFamily: GoogleFonts.adventPro().fontFamily,
-                    color: Colors.white,
+                    color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
