@@ -1,19 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:let_em_cook/bloc/home_repository.dart';
 
 part 'home_events.dart';
 part 'home_states.dart';
 
-class IngredientBloc extends Bloc<IngredientEvent, IngredientState> {
-  IngredientBloc() : super(IngredientState()) {
-    on<ToggleIngredientEvent>((event, emit) {
-      final updatedPressedIndices = Set<int>.from(state.pressedIndices);
-      if (updatedPressedIndices.contains(event.index)) {
-        updatedPressedIndices.remove(event.index);
-      } else {
-        updatedPressedIndices.add(event.index);
-      }
-      emit(IngredientState(pressedIndices: updatedPressedIndices));
+class HomeBloc extends Bloc<HomeEvents, HomeStates> {
+  HomeBloc({required HomeRepository homeRepository})
+      : super(const HomeStates()) {
+    on<ToggleIngredientEvent>((event, emit) async {
+      emit(const ToggleIngredientState());
+    });
+
+    on<InitialEvent>((event, emit) async {
+      emit(const InitialState());
+    });
+
+    on<NoRecipesFoundEvent>((event, emit) async {
+      emit(const NoRecipesFoundState());
     });
   }
 }

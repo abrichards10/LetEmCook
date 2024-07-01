@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:let_em_cook/bloc/home_bloc.dart';
+import 'package:let_em_cook/bloc/home_repository.dart';
 import 'package:let_em_cook/home.dart';
 
 void main() {
@@ -10,9 +13,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(title: 'Let Em Cook'),
+    return RepositoryProvider(
+      create: (context) => HomeRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                HomeBloc(homeRepository: HomeRepository())..add(InitialEvent()),
+          )
+        ],
+        child: const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: HomePage(),
+        ),
+      ),
     );
   }
 }

@@ -1,17 +1,14 @@
 part of 'home_bloc.dart';
 
-abstract class IngredientEvent extends Equatable {
-  const IngredientEvent();
+abstract class HomeEvents extends Equatable {
+  const HomeEvents();
 
   @override
   List<Object> get props => [];
 }
 
-class ToggleIngredientEvent extends IngredientEvent {
-  final int index;
+class InitialEvent extends HomeEvents {}
 
-  const ToggleIngredientEvent(this.index);
+class NoRecipesFoundEvent extends HomeEvents {}
 
-  @override
-  List<Object> get props => [index];
-}
+class ToggleIngredientEvent extends HomeEvents {}

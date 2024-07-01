@@ -3,20 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:let_em_cook/bloc/home_bloc.dart';
 import 'package:let_em_cook/models/recipe_info.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({
+    super.key,
+  });
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
+  bool _noRecipesInList = false; // TODO: change
+
   List<String> ingredientsList = <String>[
     "🌾 flour",
     "🍬 sugar",
@@ -85,207 +89,257 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> selectedIngredients = <String>[];
 
+  List<RecipeInfo> searchedRecipeResults = <RecipeInfo>[
+    RecipeInfo(
+        name: "name", pictureUrl: "pictureUrl", description: "description"),
+    RecipeInfo(
+        name: "name", pictureUrl: "pictureUrl", description: "description"),
+    RecipeInfo(
+        name: "name", pictureUrl: "pictureUrl", description: "description"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    selectedIngredients = [];
 
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        actions: [
-          IconButton(
+    if (selectedIngredients.isEmpty) {
+      context.read<HomeBloc>().add(NoRecipesFoundEvent());
+    }
+
+    return BlocListener<HomeBloc, HomeStates>(
+      listener: (context, state) {
+        _blocListener(state);
+      },
+      child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.account_circle_outlined,
+              ),
+              onPressed: () {},
+            )
+          ],
+          leading: IconButton(
             icon: Icon(
-              Icons.account_circle_outlined,
+              Icons.menu_rounded,
             ),
             onPressed: () {},
-          )
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.menu_rounded,
           ),
-          onPressed: () {},
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        // title: Text(
-        //   "Let 'Em Cook",
-        //   style: TextStyle(
-        //  fontFamily: GoogleFonts.adventPro().fontFamily,
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: width * .08,
-        //   ),
-        // ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _savedRecipesList(),
-            Divider(
-              indent: 20,
-              endIndent: 20,
+        body: Container(
+          height: height - 50,
+          child: Column(
+            children: [
+              _savedRecipesList(),
+              Divider(
+                color: Color.fromARGB(150, 144, 208, 156),
+                thickness: 2,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Expanded(
+                child: _searchedRecipesResults(),
+              ),
+              Divider(
+                color: Color.fromARGB(150, 144, 208, 156),
+                thickness: 2,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Expanded(
+                child: _ingredientsList(),
+              ),
+              // Expanded(
+              _searchRecipesButton(context),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          unselectedItemColor: Colors.white,
+          backgroundColor: Colors.white,
+          fixedColor: Colors.white,
+          selectedFontSize: 0,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: Colors.black,
+              ),
+              label: "",
             ),
-            _searchedRecipesResults(),
-            Divider(
-              indent: 20,
-              endIndent: 20,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.save,
+                color: Colors.black,
+              ),
+              label: "",
             ),
-            _ingredientsList(),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.abc,
+                color: Colors.black,
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.abc,
+                color: Colors.black,
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.abc,
+                color: Colors.black,
+              ),
+              label: "",
+            )
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedFontSize: 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.abc,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.abc,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.abc,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.abc,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.abc,
-              color: Colors.black,
-            ),
-            label: "",
-          )
-        ],
       ),
     );
   }
 
-  CarouselSlider _savedRecipesList() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 250.0,
-        aspectRatio: 16 / 9,
-        viewportFraction: 0.35,
+  _blocListener(state) {
+    if (state == NoRecipesFoundState()) {
+      setState(() {
+        _noRecipesInList = true;
+      });
+    }
+    if (state == ToggleIngredientState()) {
+      setState(() {});
+    }
+  }
+
+  Container _savedRecipesList() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        0,
+        20,
+        0,
       ),
-      items: savedRecipes.map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(10),
-                  width: 200.0,
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: AssetImage('assets/image1.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(150, 144, 208, 156),
-                        offset: Offset(
-                          5,
-                          5,
-                        ),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 200.0,
+          aspectRatio: 16 / 9,
+          viewportFraction: 0.35,
+        ),
+        items: savedRecipes.map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    width: 100.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      image: DecorationImage(
+                        image: AssetImage('assets/image1.jpg'),
+                        fit: BoxFit.cover,
                       ),
-                    ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(150, 144, 208, 156),
+                          offset: Offset(
+                            5,
+                            5,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Text(
-                  "TITLE",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.adventPro().fontFamily,
+                  Text(
+                    "TITLE",
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.adventPro().fontFamily,
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
-        );
-      }).toList(),
+                ],
+              );
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 
   _searchedRecipesResults() {
-    return SizedBox(
-      height: 200,
-      child: GridView.builder(
-          itemCount: 100,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(10),
-                  width: 150.0,
-                  height: 150.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: AssetImage('assets/image1.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(150, 144, 208, 156),
-                        offset: Offset(
-                          5,
-                          5,
-                        ),
+    return GridView.builder(
+        itemCount: searchedRecipeResults.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 10,
+          crossAxisCount: 2,
+          childAspectRatio: 1,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(20),
+                width: 120.0,
+                height: 120.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  image: DecorationImage(
+                    image: AssetImage('assets/image2.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(150, 144, 208, 156),
+                      offset: Offset(
+                        5,
+                        5,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Text(
-                  "TITLE",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.adventPro().fontFamily,
-                  ),
+              ),
+              Text(
+                "TITLE",
+                style: TextStyle(
+                  fontFamily: GoogleFonts.adventPro().fontFamily,
                 ),
-              ],
-            );
-          }),
-    );
+              ),
+            ],
+          );
+        });
   }
 
   SizedBox _ingredientsList() {
     return SizedBox(
-      height: 200,
+      // height: 200,
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(10),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4, childAspectRatio: 1),
+            crossAxisCount: 4,
+            childAspectRatio: 1.5,
+          ),
           itemCount: ingredientsList.length,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
             return TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<HomeBloc>().add(ToggleIngredientEvent());
+              },
               child: Container(
                 alignment: Alignment.center,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: true // TODO: CHANGE
+                      ? Colors.white
+                      : Color.fromARGB(150, 144, 208, 156),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
@@ -302,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ingredientsList[index],
                   style: TextStyle(
                     fontFamily: GoogleFonts.adventPro().fontFamily,
-                    color: Colors.grey,
+                    color: const Color.fromARGB(255, 61, 61, 61),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -310,6 +364,24 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  _searchRecipesButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {},
+      style: ButtonStyle(
+        padding: WidgetStateProperty.all(EdgeInsets.fromLTRB(30, 0, 30, 0)),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          Color.fromARGB(150, 144, 208, 156),
+        ),
+        foregroundColor: WidgetStateProperty.all<Color>(
+            Colors.white), // Set the text color to white for better contrast
+      ),
+      child: Text(
+        "Search",
+        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
       ),
     );
   }
