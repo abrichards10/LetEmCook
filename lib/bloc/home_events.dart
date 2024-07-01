@@ -11,4 +11,8 @@ class InitialEvent extends HomeEvents {}
 
 class NoRecipesFoundEvent extends HomeEvents {}
 
-class ToggleIngredientEvent extends HomeEvents {}
+class ToggleIngredientEvent extends HomeEvents {
+  final String ingredient;
+
+  const ToggleIngredientEvent(this.ingredient);
+}

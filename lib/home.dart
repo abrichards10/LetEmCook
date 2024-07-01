@@ -59,10 +59,10 @@ class _HomePageState extends State<HomePage> {
     "🌿 cilantro",
     "🌿 cumin",
     "🌶️ paprika",
-    "🌰 cinnamon",
+    "🥮 cinnamon",
     "🍂 nutmeg",
     "🍠 ginger",
-    "⚫ black pepper",
+    "🧂 black pepper",
     "🌶️ red pepper flakes"
   ];
 
@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: Icon(
                 Icons.account_circle_outlined,
+                color: Color.fromARGB(255, 16, 84, 34),
               ),
               onPressed: () {},
             )
@@ -126,6 +127,7 @@ class _HomePageState extends State<HomePage> {
           leading: IconButton(
             icon: Icon(
               Icons.menu_rounded,
+              color: Color.fromARGB(255, 16, 84, 34),
             ),
             onPressed: () {},
           ),
@@ -154,6 +156,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: _ingredientsList(),
               ),
+
               // Expanded(
               _searchRecipesButton(context),
             ],
@@ -168,36 +171,36 @@ class _HomePageState extends State<HomePage> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(
+                Icons.phone,
+                color: Color.fromARGB(255, 33, 78, 35),
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.favorite,
+                color: Color.fromARGB(255, 33, 78, 35),
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
                 Icons.home,
-                color: Colors.black,
+                color: Color.fromARGB(255, 33, 78, 35),
               ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.save,
-                color: Colors.black,
+                Icons.map,
+                color: Color.fromARGB(255, 33, 78, 35),
               ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.abc,
-                color: Colors.black,
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.abc,
-                color: Colors.black,
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.abc,
-                color: Colors.black,
+                Icons.shopping_bag_outlined,
+                color: Color.fromARGB(255, 33, 78, 35),
               ),
               label: "",
             )
@@ -213,7 +216,18 @@ class _HomePageState extends State<HomePage> {
         _noRecipesInList = true;
       });
     }
-    if (state == ToggleIngredientState()) {
+    if (state == ToggleIngredientState) {
+      print("Got to here");
+      if (ingredientsList.contains(state.ingredient)) {
+        print("removed ingredient from list");
+        ingredientsList.remove(state.ingredient);
+      } else {
+        print("added ingredient to list");
+        ingredientsList.add(state.ingredient);
+      }
+      // search for ingredient in existing list
+      // if it doesn't exist then add Ingredient to list
+      // if it does exist, remove it from the list
       setState(() {});
     }
   }
@@ -286,8 +300,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 margin: EdgeInsets.all(20),
-                width: 120.0,
-                height: 120.0,
+                width: 108.0,
+                height: 108.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
@@ -331,7 +345,9 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             return TextButton(
               onPressed: () {
-                context.read<HomeBloc>().add(ToggleIngredientEvent());
+                context
+                    .read<HomeBloc>()
+                    .add(ToggleIngredientEvent(ingredientsList[index]));
               },
               child: Container(
                 alignment: Alignment.center,
@@ -369,19 +385,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   _searchRecipesButton(BuildContext context) {
-    return TextButton(
-      onPressed: () {},
-      style: ButtonStyle(
-        padding: WidgetStateProperty.all(EdgeInsets.fromLTRB(30, 0, 30, 0)),
-        backgroundColor: WidgetStateProperty.all<Color>(
-          Color.fromARGB(150, 144, 208, 156),
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: TextButton(
+        onPressed: () {},
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all(EdgeInsets.fromLTRB(30, 0, 30, 0)),
+          backgroundColor: WidgetStateProperty.all<Color>(
+            Color.fromARGB(150, 144, 208, 156),
+          ),
+          foregroundColor: WidgetStateProperty.all<Color>(
+            Colors.white,
+          ),
         ),
-        foregroundColor: WidgetStateProperty.all<Color>(
-            Colors.white), // Set the text color to white for better contrast
-      ),
-      child: Text(
-        "Search",
-        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+        child: Text(
+          "Search",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: GoogleFonts.adventPro().fontFamily,
+            color: Color.fromARGB(255, 16, 84, 34),
+          ),
+        ),
       ),
     );
   }

@@ -6,18 +6,17 @@ part 'home_events.dart';
 part 'home_states.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeStates> {
-  HomeBloc({required HomeRepository homeRepository})
-      : super(const HomeStates()) {
+  HomeBloc({required HomeRepository homeRepository}) : super(HomeStates()) {
     on<ToggleIngredientEvent>((event, emit) async {
-      emit(const ToggleIngredientState());
+      emit(ToggleIngredientState(ingredient: event.ingredient));
     });
 
     on<InitialEvent>((event, emit) async {
-      emit(const InitialState());
+      emit(InitialState());
     });
 
     on<NoRecipesFoundEvent>((event, emit) async {
-      emit(const NoRecipesFoundState());
+      emit(NoRecipesFoundState());
     });
   }
 }

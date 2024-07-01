@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:let_em_cook/bloc/home_bloc.dart';
 import 'package:let_em_cook/bloc/home_repository.dart';
 import 'package:let_em_cook/home.dart';
+import 'package:let_em_cook/intro_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,9 +23,9 @@ class MyApp extends StatelessWidget {
                 HomeBloc(homeRepository: HomeRepository())..add(InitialEvent()),
           )
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: HomePage(),
+          home: IntroScreen(),
         ),
       ),
     );

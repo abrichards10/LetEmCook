@@ -1,22 +1,17 @@
 part of 'home_bloc.dart';
 
-class HomeStates extends Equatable {
-  final Set<int> pressedIndices;
-
-  const HomeStates({this.pressedIndices = const <int>{}});
-
-  @override
-  List<Object> get props => [pressedIndices];
-}
+class HomeStates {}
 
 class InitialState extends HomeStates {
-  const InitialState();
+  InitialState();
 }
 
 class NoRecipesFoundState extends HomeStates {
-  const NoRecipesFoundState();
+  NoRecipesFoundState();
 }
 
 class ToggleIngredientState extends HomeStates {
-  const ToggleIngredientState();
+  final String ingredient;
+
+  ToggleIngredientState({required this.ingredient});
 }
