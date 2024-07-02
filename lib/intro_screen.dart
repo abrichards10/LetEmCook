@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:let_em_cook/home.dart';
+import 'package:let_em_cook/navigation.dart';
 
 class IntroScreen extends StatefulWidget {
   @override

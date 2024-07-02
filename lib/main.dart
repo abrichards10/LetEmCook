@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:let_em_cook/bloc/home_bloc.dart';
 import 'package:let_em_cook/bloc/home_repository.dart';
-import 'package:let_em_cook/home.dart';
+import 'package:let_em_cook/navigation.dart';
 import 'package:let_em_cook/intro_screen.dart';
 
 void main() {
