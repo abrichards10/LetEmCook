@@ -42,20 +42,20 @@ class _IntroScreenState extends State<IntroScreen>
 
   void _onSwipeUp() {
     print("Swipe up detected");
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => NavigationPage()));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onVerticalDragEnd: (details) {
-          if (details.primaryVelocity! < 0) {
-            _onSwipeUp();
-          }
-        },
-        child: Stack(
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity! < 0) {
+          _onSwipeUp();
+        }
+      },
+      child: Scaffold(
+        body: Stack(
           children: <Widget>[
             Center(
               child: SlideTransition(
@@ -74,14 +74,14 @@ class _IntroScreenState extends State<IntroScreen>
                         ),
                       ),
                       SizedBox(height: 20.0),
-                      Text(
-                        'The best app ever',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontFamily: GoogleFonts.adventPro().fontFamily,
-                        ),
-                      ),
-                      SizedBox(height: 50.0),
+                      // Text(
+                      //   'The best app ever', // TODO: change
+                      //   style: TextStyle(
+                      //     fontSize: 24.0,
+                      //     fontFamily: GoogleFonts.adventPro().fontFamily,
+                      //   ),
+                      // ),
+                      // SizedBox(height: 50.0),
                       Icon(
                         Icons.keyboard_arrow_up,
                         size: 48.0,

@@ -1,24 +1,18 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:let_em_cook/bloc/home_bloc.dart';
 import 'package:let_em_cook/models/recipe_info.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
-
+class MainPage extends StatefulWidget {
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<StatefulWidget> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
   bool _noRecipesInList = false; // TODO: change
 
   List<String> ingredientsList = <String>[
@@ -102,18 +96,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     selectedIngredients = [];
 
     if (selectedIngredients.isEmpty) {
       context.read<HomeBloc>().add(NoRecipesFoundEvent());
     }
-
     return BlocListener<HomeBloc, HomeStates>(
       listener: (context, state) {
         _blocListener(state);
       },
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           actions: [
             IconButton(
@@ -162,62 +155,18 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          unselectedItemColor: Colors.white,
-          backgroundColor: Colors.white,
-          fixedColor: Colors.white,
-          selectedFontSize: 0,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.phone,
-                color: Color.fromARGB(255, 33, 78, 35),
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.favorite,
-                color: Color.fromARGB(255, 33, 78, 35),
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Color.fromARGB(255, 33, 78, 35),
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.map,
-                color: Color.fromARGB(255, 33, 78, 35),
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.shopping_bag_outlined,
-                color: Color.fromARGB(255, 33, 78, 35),
-              ),
-              label: "",
-            )
-          ],
-        ),
       ),
     );
   }
 
   _blocListener(state) {
     if (state == NoRecipesFoundState()) {
+      print("Got to here");
       setState(() {
         _noRecipesInList = true;
       });
     }
     if (state == ToggleIngredientState) {
-      print("Got to here");
       if (ingredientsList.contains(state.ingredient)) {
         print("removed ingredient from list");
         ingredientsList.remove(state.ingredient);
@@ -225,9 +174,6 @@ class _HomePageState extends State<HomePage> {
         print("added ingredient to list");
         ingredientsList.add(state.ingredient);
       }
-      // search for ingredient in existing list
-      // if it doesn't exist then add Ingredient to list
-      // if it does exist, remove it from the list
       setState(() {});
     }
   }
