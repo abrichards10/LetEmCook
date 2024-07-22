@@ -4,9 +4,16 @@ import 'package:let_em_cook/bloc/home_bloc.dart';
 import 'package:let_em_cook/bloc/home_repository.dart';
 import 'package:let_em_cook/navigation.dart';
 import 'package:let_em_cook/intro_screen.dart';
+import 'package:let_em_cook/shopping.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartModel(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,9 +30,12 @@ class MyApp extends StatelessWidget {
                 HomeBloc(homeRepository: HomeRepository())..add(InitialEvent()),
           )
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: IntroScreen(),
+        child: ChangeNotifierProvider(
+          create: (context) => CartModel(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: IntroScreen(),
+          ),
         ),
       ),
     );

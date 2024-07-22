@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:let_em_cook/bloc/home_bloc.dart';
+import 'package:let_em_cook/database_helper.dart';
 import 'package:let_em_cook/models/recipe_info.dart';
 
 class MainPage extends StatefulWidget {
@@ -94,7 +95,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     selectedIngredients = [];
@@ -107,6 +107,7 @@ class _MainPageState extends State<MainPage> {
         _blocListener(state);
       },
       child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           actions: [
             IconButton(
@@ -235,45 +236,46 @@ class _MainPageState extends State<MainPage> {
 
   _searchedRecipesResults() {
     return GridView.builder(
-        itemCount: searchedRecipeResults.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: 10,
-          crossAxisCount: 2,
-          childAspectRatio: 1,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(20),
-                width: 108.0,
-                height: 108.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  image: DecorationImage(
-                    image: AssetImage('assets/image2.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(150, 144, 208, 156),
-                      offset: Offset(
-                        5,
-                        5,
-                      ),
+      itemCount: searchedRecipeResults.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisSpacing: 10,
+        crossAxisCount: 2,
+        childAspectRatio: 1,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: [
+            Container(
+              margin: EdgeInsets.all(20),
+              width: 108.0,
+              height: 108.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: AssetImage('assets/image2.jpg'),
+                  fit: BoxFit.cover,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(150, 144, 208, 156),
+                    offset: Offset(
+                      5,
+                      5,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Text(
-                "TITLE",
-                style: TextStyle(
-                  fontFamily: GoogleFonts.adventPro().fontFamily,
-                ),
+            ),
+            Text(
+              "TITLE",
+              style: TextStyle(
+                fontFamily: GoogleFonts.adventPro().fontFamily,
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 
   SizedBox _ingredientsList() {

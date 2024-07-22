@@ -12,6 +12,7 @@ class _IntroScreenState extends State<IntroScreen>
   late AnimationController _controller;
   late Animation<double> _opacity;
   late Animation<Offset> _offset;
+  double fontSize = 32;
 
   @override
   void initState() {
@@ -48,13 +49,26 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
+    print(fontSize);
     return GestureDetector(
+      onVerticalDragUpdate: (details) {
+        if (details.primaryDelta! < 0) {
+          print("updating");
+          if (fontSize < 75) {
+            fontSize += 1;
+          }
+          setState(() {});
+        }
+      },
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity! < 0) {
           _onSwipeUp();
+          fontSize = 50;
         }
       },
+      onVerticalDragCancel: () {},
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
             Center(
@@ -68,7 +82,7 @@ class _IntroScreenState extends State<IntroScreen>
                       Text(
                         'Let \'Em Cook',
                         style: TextStyle(
-                          fontSize: 32.0,
+                          fontSize: fontSize,
                           fontWeight: FontWeight.bold,
                           fontFamily: GoogleFonts.adventPro().fontFamily,
                         ),
