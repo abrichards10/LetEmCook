@@ -29,13 +29,13 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> insertItem(Map<String, dynamic> row) async {
-    Database db = await database;
-    return await db.insert('items', row);
+  Future<void> insertItem(Map<String, dynamic> row) async {
+    final db = await database;
+    await db.insert('items', row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllItems() async {
-    Database db = await database;
+    final db = await database;
     return await db.query('items');
   }
 

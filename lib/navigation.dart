@@ -5,7 +5,7 @@ import 'package:let_em_cook/favorite.dart';
 import 'package:let_em_cook/home_screen.dart';
 import 'package:let_em_cook/map.dart';
 import 'package:let_em_cook/order.dart';
-import 'package:let_em_cook/shopping.dart';
+import 'package:let_em_cook/groceries.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({
@@ -23,7 +23,7 @@ class _NavigationPageState extends State<NavigationPage> {
     FavoritePage(),
     MainPage(),
     MapPage(),
-    ShoppingPage(),
+    GroceriesPage(),
   ];
 
   @override

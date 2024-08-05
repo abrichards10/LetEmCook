@@ -12,6 +12,10 @@ class NoRecipesFoundState extends HomeStates {
 
 class ToggleIngredientState extends HomeStates {
   final String ingredient;
+  final List<String> selectedIngredients;
 
-  ToggleIngredientState({required this.ingredient});
+  ToggleIngredientState(
+      {required this.ingredient, required this.selectedIngredients});
+
+  List<Object> get props => [ingredient, selectedIngredients];
 }

@@ -17,48 +17,48 @@ class _MainPageState extends State<MainPage> {
   bool _noRecipesInList = false; // TODO: change
 
   List<String> ingredientsList = <String>[
-    "🌾 flour",
-    "🍬 sugar",
-    "🧂 salt",
-    "🧈 butter",
-    "🥚 eggs",
-    "🥛 milk",
-    "🧁 baking powder",
-    "🍦 vanilla extract",
-    "🍫 chocolate chips",
-    "🍫 cocoa powder",
-    "🍯 brown sugar",
-    "🥤 baking soda",
-    "🍞 yeast",
-    "🫒 olive oil",
-    "🍯 honey",
-    "🍋 lemon juice",
-    "🧄 garlic",
-    "🧅 onion",
-    "🍅 tomato",
-    "🥕 carrot",
-    "🥬 celery",
-    "🍗 chicken broth",
-    "🥩 beef broth",
-    "🍝 pasta",
-    "🍚 rice",
-    "🫘 beans",
-    "🌽 corn",
-    "🫑 bell pepper",
-    "🧀 cheese",
-    "🌿 basil",
-    "🌿 oregano",
-    "🌿 thyme",
-    "🌿 rosemary",
-    "🌿 parsley",
-    "🌿 cilantro",
-    "🌿 cumin",
-    "🌶️ paprika",
-    "🥮 cinnamon",
-    "🍂 nutmeg",
-    "🍠 ginger",
-    "🧂 black pepper",
-    "🌶️ red pepper flakes"
+    "flour",
+    "sugar",
+    "salt",
+    "butter",
+    "eggs",
+    "milk",
+    "baking powder",
+    "vanilla extract",
+    "chocolate chips",
+    "cocoa powder",
+    "brown sugar",
+    "baking soda",
+    "yeast",
+    "olive oil",
+    "honey",
+    "lemon juice",
+    "garlic",
+    "onion",
+    "tomato",
+    "carrot",
+    "celery",
+    "chicken broth",
+    "beef broth",
+    "pasta",
+    "rice",
+    "beans",
+    "corn",
+    "bell pepper",
+    "cheese",
+    "basil",
+    "oregano",
+    "thyme",
+    "rosemary",
+    "parsley",
+    "cilantro",
+    "cumin",
+    "paprika",
+    "cinnamon",
+    "nutmeg",
+    "ginger",
+    "black pepper",
+    "red pepper flakes"
   ];
 
   List<RecipeInfo> savedRecipes = <RecipeInfo>[
@@ -84,6 +84,8 @@ class _MainPageState extends State<MainPage> {
 
   List<String> selectedIngredients = <String>[];
 
+  Set<String> selectedIngredientsSet = {};
+
   List<RecipeInfo> searchedRecipeResults = <RecipeInfo>[
     RecipeInfo(
         name: "name", pictureUrl: "pictureUrl", description: "description"),
@@ -92,6 +94,8 @@ class _MainPageState extends State<MainPage> {
     RecipeInfo(
         name: "name", pictureUrl: "pictureUrl", description: "description"),
   ];
+
+  TextEditingController customIngredientController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +143,7 @@ class _MainPageState extends State<MainPage> {
                 endIndent: 20,
               ),
               Expanded(
+                flex: 2, // Adjust the flex value to give more or less space
                 child: _searchedRecipesResults(),
               ),
               Divider(
@@ -148,11 +153,13 @@ class _MainPageState extends State<MainPage> {
                 endIndent: 20,
               ),
               Expanded(
+                flex: 2, // Adjust this flex value if needed
                 child: _ingredientsList(),
               ),
-
-              // Expanded(
-              _searchRecipesButton(context),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: _searchRecipesButton(context),
+              ),
             ],
           ),
         ),
@@ -161,19 +168,16 @@ class _MainPageState extends State<MainPage> {
   }
 
   _blocListener(state) {
-    if (state == NoRecipesFoundState()) {
-      print("Got to here");
-      setState(() {
-        _noRecipesInList = true;
-      });
+    if (state is NoRecipesFoundState) {
+      _noRecipesInList = true;
     }
-    if (state == ToggleIngredientState) {
-      if (ingredientsList.contains(state.ingredient)) {
-        print("removed ingredient from list");
-        ingredientsList.remove(state.ingredient);
+    if (state is ToggleIngredientState) {
+      if (selectedIngredientsSet.contains(state.ingredient)) {
+        print("removed ingredient from set");
+        selectedIngredientsSet.remove(state.ingredient);
       } else {
-        print("added ingredient to list");
-        ingredientsList.add(state.ingredient);
+        print("added ingredient to set");
+        selectedIngredientsSet.add(state.ingredient);
       }
       setState(() {});
     }
@@ -246,9 +250,9 @@ class _MainPageState extends State<MainPage> {
         return Column(
           children: [
             Container(
-              margin: EdgeInsets.all(20),
-              width: 108.0,
-              height: 108.0,
+              margin: EdgeInsets.all(30),
+              width: 120,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 image: DecorationImage(
@@ -278,46 +282,50 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  SizedBox _ingredientsList() {
-    return SizedBox(
-      // height: 200,
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 1.5,
-          ),
-          itemCount: ingredientsList.length,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
+  _ingredientsList() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 1.5,
+        ),
+        itemCount: ingredientsList.length + 1,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return _customIngredientAddButton();
+          } else {
             return TextButton(
               onPressed: () {
                 context
                     .read<HomeBloc>()
-                    .add(ToggleIngredientEvent(ingredientsList[index]));
+                    .add(ToggleIngredientEvent(ingredientsList[index - 1]));
               },
               child: Container(
                 alignment: Alignment.center,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: true // TODO: CHANGE
-                      ? Colors.white
-                      : Color.fromARGB(150, 144, 208, 156),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(150, 144, 208, 156),
-                      offset: Offset(
-                        5,
-                        5,
-                      ),
-                    ),
-                  ],
-                ),
+                    color: selectedIngredientsSet
+                            .contains(ingredientsList[index - 1])
+                        ? Color.fromARGB(150, 144, 208, 156)
+                        : Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: selectedIngredientsSet
+                            .contains(ingredientsList[index - 1])
+                        ? []
+                        : [
+                            BoxShadow(
+                              color: Color.fromARGB(150, 144, 208, 156),
+                              offset: Offset(
+                                5,
+                                5,
+                              ),
+                            ),
+                          ]),
                 child: Text(
                   textAlign: TextAlign.center,
-                  ingredientsList[index],
+                  ingredientsList[index - 1],
                   style: TextStyle(
                     fontFamily: GoogleFonts.adventPro().fontFamily,
                     color: const Color.fromARGB(255, 61, 61, 61),
@@ -326,7 +334,98 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             );
-          },
+          }
+        },
+      ),
+    );
+  }
+
+  _customIngredientAddButton() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(150, 144, 208, 156),
+            offset: Offset(
+              5,
+              5,
+            ),
+          ),
+        ],
+      ),
+      child: IconButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              String customIngredient = '';
+              return AlertDialog(
+                title: Center(
+                  child: Text(
+                    'Add Custom Grocery',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontFamily: GoogleFonts.adventPro().fontFamily,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                content: TextField(
+                  controller: customIngredientController,
+                  onChanged: (value) {
+                    customIngredient = value;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter custom ingredient',
+                    hintStyle: TextStyle(
+                      color: Color.fromARGB(255, 161, 161, 161),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text(
+                      'Close',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      'Add',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (customIngredient.isNotEmpty) {
+                        setState(() {
+                          ingredientsList.insert(0, customIngredient);
+                        });
+                        customIngredientController.clear();
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        icon: Icon(
+          Icons.add,
+          color: Colors.green,
         ),
       ),
     );
@@ -334,7 +433,6 @@ class _MainPageState extends State<MainPage> {
 
   _searchRecipesButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
       child: TextButton(
         onPressed: () {},
         style: ButtonStyle(
