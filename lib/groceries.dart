@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:let_em_cook/database_helper.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GroceriesPage extends StatefulWidget {
   @override
@@ -81,8 +82,6 @@ class _GroceriesPageState extends State<GroceriesPage> {
 
   final dbHelper = DatabaseHelper();
   List<Map<String, dynamic>> _items = [];
-
-  bool _isSorted = false;
 
   @override
   void initState() {
@@ -294,10 +293,8 @@ class _GroceriesPageState extends State<GroceriesPage> {
           onTap: () {
             if (isInCart) {
               cart.removeItem(_items[index]['name']);
-              // _deleteItem(_items[index]['name']);
             } else {
               cart.addItem(_items[index]['name']);
-              // _addItem(_items[index]['name']);
             }
           },
         ),
@@ -313,8 +310,8 @@ class _GroceriesPageState extends State<GroceriesPage> {
       print("deleting: $removedItem");
       print("ITEMS (remove): $_items");
       cart.removeItem(removedItem);
-      _deleteItem(removedItem); // Make sure _deleteItem removes from database
-      _items.removeAt(index); // Remove the item from _items list
+      _deleteItem(removedItem);
+      _items.removeAt(index);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -401,23 +398,31 @@ class CartModel extends ChangeNotifier {
 
   List<String> get items => _items;
 
-  void addItem(String item) {
+  Future<void> addItem(String item) async {
     if (!_items.contains(item)) {
       _items.add(item);
+      await _saveCart();
       notifyListeners();
     }
   }
 
-  void removeItem(String item) {
+  Future<void> removeItem(String item) async {
     if (_items.contains(item)) {
       _items.remove(item);
+      await _saveCart();
       notifyListeners();
     }
   }
 
-  void _initializeCart() async {
-    final data = await dbHelper.queryAllItems();
-    _items.addAll(data.map((item) => item['name'] as String));
+  Future<void> _initializeCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedItems = prefs.getStringList('cart_items') ?? [];
+    _items.addAll(savedItems);
     notifyListeners();
+  }
+
+  Future<void> _saveCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('cart_items', _items);
   }
 }
